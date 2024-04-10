@@ -9,7 +9,7 @@ import Products from '@/components/products'
 export default function Home() {
   const toast = useToast();
   const { isLoading, data, error } = useQuery({
-    queryKey: ['produto'], queryFn: () => {
+    queryKey: ['productList'], queryFn: () => {
       return api.get('/products')
         .then((response) => response.data)
     },
@@ -41,7 +41,9 @@ export default function Home() {
   }
 
   if (error) {
-    return <span>Error: {error.message}</span>
+    return (<Flex justifyContent="center" alignItems="center" height="100vh">
+      <Text fontSize='3xl' textColor=''>Erro: {error.message}</Text>
+    </Flex>)
   }
   return (
     <>

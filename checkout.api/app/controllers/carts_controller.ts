@@ -18,16 +18,16 @@ export default class CartsController {
         const productData = await Product.findBy('id', cartItem.productId)
         if (productData != null) {
           return {
-            produto: {
+            product: {
               id: productData.id,
-              descricao: productData.descricao,
-              unidade: productData.unidade,
-              marca: productData.marca,
-              peso: productData.peso,
+              description: productData.description,
+              unit: productData.unit,
+              brand: productData.brand,
+              weight: productData.weight,
             },
             index: cartItem.index,
-            quantidade: cartItem.quantidade,
-            preco: cartItem.preco
+            quantity: cartItem.quantity,
+            price: cartItem.price
           };
         }
         return response.status(404).send(`Produto anexado ao carrinho item ${cartItem.id}, não foi encontrado`)

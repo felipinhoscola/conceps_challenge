@@ -22,10 +22,10 @@ export default class CartItem extends BaseModel {
   declare product: BelongsTo<typeof Product>
 
   @column()
-  declare quantidade: number;
+  declare quantity: number;
 
   @column()
-  declare preco: number;
+  declare price: number;
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

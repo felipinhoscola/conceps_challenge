@@ -1,8 +1,8 @@
 import { Td, Tr, Image, Text, Flex, Box, Button, Input } from "@chakra-ui/react";
 
 
-export default function TableRow({ data, removeItem, updateItem }) {
-    let preco = Number(data.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+export default function TableRow({ data, removeItem, updateItem }: any) {
+    let price = Number(data.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 
     return (
         <Tr>
@@ -15,8 +15,8 @@ export default function TableRow({ data, removeItem, updateItem }) {
                         </Image>
                     </Box>
                     <Flex m='1' flexDir='column' justifyContent='center'>
-                        <Text fontSize='lg' fontWeight='bold'>{data.produto.descricao}</Text>
-                        <Text>{data.produto.marca}</Text>
+                        <Text fontSize='lg' fontWeight='bold'>{data.product.description}</Text>
+                        <Text>{data.product.brand}</Text>
                     </Flex>
                 </Flex>
 
@@ -24,11 +24,11 @@ export default function TableRow({ data, removeItem, updateItem }) {
             <Td>
                 <Box>
                     <Button variant='solid' colorScheme='green' size='xs' onClick={() => { updateItem(data, 'decrease') }} >-</Button>
-                    <Input htmlSize={1} textAlign='center' width='auto' readOnly rounded='lg' mx='1' size='sm' value={data.quantidade} />
+                    <Input htmlSize={1} textAlign='center' width='auto' readOnly rounded='lg' mx='1' size='sm' value={data.quantity} />
                     <Button variant='solid' colorScheme='green' size='xs' onClick={() => { updateItem(data, 'increase') }} >+</Button>
                 </Box></Td>
-            <Td>{preco}</Td>
-            <Td><Button variant='solid' colorScheme='red' size='xs' onClick={() => { removeItem.mutate(data.produto.id) }}>X</Button></Td>
+            <Td>{price}</Td>
+            <Td><Button variant='solid' colorScheme='red' size='xs' onClick={() => { removeItem.mutate(data.product.id) }}>X</Button></Td>
         </Tr >
     );
 }

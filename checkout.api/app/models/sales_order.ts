@@ -31,6 +31,9 @@ export default class SalesOrder extends BaseModel {
   declare product_price: number
 
   @column()
+  declare product_volume: number
+
+  @column()
   declare product_unit: string
 
   @column()

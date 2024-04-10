@@ -11,14 +11,14 @@ export default function Home() {
   const toast = useToast();
 
   const { isLoading, data, error, refetch } = useQuery({
-    queryKey: ['list'], queryFn: () => {
+    queryKey: ['cartList'], queryFn: () => {
       return api.get('/cart/1')
         .then((response) => response.data)
     },
   });
   const removeItem = useMutation({
-    mutationFn: (produtoId) => {
-      return api.delete(`/cartItems/${produtoId}`)
+    mutationFn: (productId) => {
+      return api.delete(`/cartItems/${productId}`)
         .then((response) => response.data)
         .catch(error => {
           console.error(error);
@@ -27,22 +27,22 @@ export default function Home() {
     },
   })
   const updateItem = async (item: any, action: any) => {
-    let newQuantidade = item.quantidade;
-    let produtoId = item.produto.id;
+    let newQuantity = item.quantity;
+    let productId = item.product.id;
     if (action === 'decrease') {
-      if (newQuantidade === 1) {
+      if (newQuantity === 1) {
         return
       }
-      newQuantidade--;
+      newQuantity--;
     }
     if (action === 'increase') {
-      newQuantidade++;
+      newQuantity++;
     }
 
-    const reponse = await checkStock.mutateAsync({ id: produtoId, estoque: newQuantidade });
+    const reponse = await checkStock.mutateAsync({ id: productId, stock: newQuantity });
 
     if (reponse[0].isDisponivel) {
-      updateItemQuantity.mutate({ produtoId, newQuantidade });
+      updateItemQuantity.mutate({ productId, newQuantity });
     } else {
       toast({
         title: `Quantidade máxima de estoque atingida`,
@@ -53,28 +53,27 @@ export default function Home() {
     }
   }
   const checkStock = useMutation({
-    mutationFn: ({ id, estoque }: any) => {
-      return api.post(`/products`, {
-        "produto": {
+    mutationFn: ({ id, stock }: any) => {
+      return api.post(`/products`, [{
+        "product": {
           "id": id,
-          "estoque": estoque
+          "stock": stock
         }
-      })
+      }])
         .then((response) => response.data)
     }
   })
   const updateItemQuantity = useMutation({
-    mutationFn: ({ produtoId, newQuantidade }: any) => {
+    mutationFn: ({ productId, newQuantity }: any) => {
       return api.patch(`/cartItems/1`, {
-        "product_id": produtoId,
-        "quantidade": newQuantidade
+        "product_id": productId,
+        "quantity": newQuantity
       })
         .then((response) => response.data)
         .catch((error) => console.log(error.message))
         .finally(refetch)
     }
   })
-
   const genSalesOrder = useMutation({
     mutationFn: () => {
       return api.post(`/salesOrder/`, { cart_id: 1 })
@@ -91,13 +90,12 @@ export default function Home() {
       });
     },
   })
-
   const getTotal = () => {
     let sum = 0;
 
     if (data) {
       for (let item of data) {
-        sum += Number(item.preco);
+        sum += Number(item.price);
       }
       return sum.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
@@ -114,7 +112,9 @@ export default function Home() {
   }
 
   if (error) {
-    return <span>Error: {error.message}</span>
+    return (<Flex justifyContent="center" alignItems="center" height="100vh">
+      <Text fontSize='3xl' textColor=''>Erro: {error.message}</Text>
+    </Flex>)
   }
 
   return (
@@ -139,7 +139,7 @@ export default function Home() {
                   </Tr>
                 ) : (
                   (data || []).map((item: any) => (
-                    <TableRow key={item.produto.id} data={item} removeItem={removeItem} updateItem={updateItem} />
+                    <TableRow key={item.product.id} data={item} removeItem={removeItem} updateItem={updateItem} />
                   ))
                 )}
               </Tbody>

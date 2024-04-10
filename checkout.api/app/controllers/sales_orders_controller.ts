@@ -18,18 +18,19 @@ export default class SalesOrdersController {
 
         salesOrder.cartId = item.cart_id;
         salesOrder.productId = item.product_id;
-        salesOrder.product_desc = item.descricao;
-        salesOrder.product_brand = item.marca;
-        salesOrder.product_weight = item.peso;
-        salesOrder.product_price = (item.preco / item.quantidade)
-        salesOrder.product_unit = item.unidade;
-        salesOrder.product_total_quantity = item.quantidade;
-        salesOrder.product_total_price = item.preco;
+        salesOrder.product_desc = item.description;
+        salesOrder.product_brand = item.brand;
+        salesOrder.product_weight = item.weight;
+        salesOrder.product_price = (item.price / item.quantity)
+        salesOrder.product_unit = item.unit;
+        salesOrder.product_volume = item.volume;
+        salesOrder.product_total_quantity = item.quantity;
+        salesOrder.product_total_price = item.price;
 
         await salesOrder.save();
         const product = await Product.findBy('id', item.product_id);
         if (product) {
-          product.estoque -= salesOrder.product_total_quantity;
+          product.stock -= salesOrder.product_total_quantity;
           await product.save();
         }
       });

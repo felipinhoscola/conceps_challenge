@@ -9,8 +9,8 @@ export default class extends BaseSchema {
       table.integer('index').notNullable();
       table.integer('product_id').unsigned().references('id').inTable('products').onDelete('CASCADE');
       table.integer('cart_id').unsigned().references('id').inTable('carts').onDelete('CASCADE');
-      table.integer('quantidade').notNullable();
-      table.decimal('preco', 10, 2).notNullable();
+      table.integer('quantity').notNullable();
+      table.decimal('price', 10, 2).notNullable();
 
       table.timestamp('created_at')
       table.timestamp('updated_at')

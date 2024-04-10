@@ -1,13 +1,6 @@
 import Product from '#models/product';
 import type { HttpContext } from '@adonisjs/core/http'
 
-//interface
-interface IProductEstoqueData {
-  produto: {
-    id: number;
-    estoque: number;
-  }
-}
 export default class ProductsController {
   /**
    * Display a list of resource
@@ -21,27 +14,17 @@ export default class ProductsController {
    */
   async store({ request, response }: HttpContext) {
     try {
-      const dataRequest = request.body() as IProductEstoqueData | IProductEstoqueData[];
-      let disponibilidade;
-      if (Array.isArray(dataRequest)) {
-        disponibilidade = dataRequest.map(async item => {
-          const product = await Product.findBy('id', item.produto.id);
-          if (product != null) {
-            const isDisponivel = item.produto.estoque <= product.estoque ? true : false;
-            return { id: item.produto.id, isDisponivel };
-          }
-          return response.status(404).send(`Produto ${item.produto.id} não encontrado`);
-        });
-      } else {
-        const product = await Product.findBy('id', dataRequest.produto.id);
+      const dataRequest: any = request.body();
+      let availability;
+      availability = dataRequest.map(async (item: any) => {
+        const product = await Product.findBy('id', item.product.id);
         if (product != null) {
-          const isDisponivel = dataRequest.produto.estoque <= product.estoque ? true : false;
-          disponibilidade = [{ id: dataRequest.produto.id, isDisponivel }];
-        } else {
-          return response.status(404).send(`Produto ${dataRequest.produto.id} não encontrado`);
+          const isAvailable = product.stock >= item.product.stock ? true : false
+          return { id: item.product.id, isDisponivel: isAvailable };
         }
-      }
-      return await Promise.all(disponibilidade)
+        return response.status(404).send(`Produto ${item.product.id} não encontrado`);
+      });
+      return await Promise.all(availability)
     } catch (error) {
       return response.status(500).send(`Erro: ${error.message}`);
     }

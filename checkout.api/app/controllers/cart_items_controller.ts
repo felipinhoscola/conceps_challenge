@@ -19,13 +19,13 @@ export default class CartItemsController {
         newCartItem.cartId = cartId;
         newCartItem.index = (await CartItem.all()).length == 0 ? 1 : (await CartItem.all()).length + 1;
 
-        newCartItem.preco = product.preco;
-        newCartItem.quantidade = 1;
+        newCartItem.price = product.price;
+        newCartItem.quantity = 1;
 
         return response.ok(await newCartItem.save());
       } else {
-        cartItem.quantidade++
-        cartItem.preco = product.preco * cartItem.quantidade;
+        cartItem.quantity++
+        cartItem.price = product.price * cartItem.quantity;
 
         return response.ok(await cartItem.save());
       };
@@ -37,7 +37,7 @@ export default class CartItemsController {
   async update({ params, request, response }: HttpContext) {
     const cartId = params.id
     const produtoId = request.input("product_id")
-    const quantidade = request.input("quantidade")
+    const quantity = request.input("quantity")
 
     try {
       const cartItem = await CartItem.query().where("product_id", produtoId).andWhere("cart_id", cartId).first();
@@ -48,8 +48,8 @@ export default class CartItemsController {
       if (product == null) {
         return response.status(404).send("Produto não encontrado");
       }
-      cartItem.quantidade = parseInt(quantidade);
-      cartItem.preco = product.preco * cartItem.quantidade;
+      cartItem.quantity = parseInt(quantity);
+      cartItem.price = product.price * cartItem.quantity;
 
       return response.ok(await cartItem.save());
     } catch (error) {

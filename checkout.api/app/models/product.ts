@@ -6,25 +6,25 @@ export default class Product extends BaseModel {
   declare id: number
 
   @column()
-  declare descricao: string
+  declare description: string
 
   @column()
-  declare unidade: string
+  declare unit: string
 
   @column()
   declare volume: number
 
   @column()
-  declare marca: string
+  declare brand: string
 
   @column()
-  declare peso: string
+  declare weight: string
 
   @column()
-  declare preco: number
+  declare price: number
 
   @column()
-  declare estoque: number
+  declare stock: number
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

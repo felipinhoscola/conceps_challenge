@@ -6,13 +6,13 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
-      table.string('descricao').notNullable()
-      table.string('unidade').notNullable()
+      table.string('description').notNullable()
+      table.string('unit').notNullable()
       table.decimal('volume', 8, 2).notNullable()
-      table.string('marca').notNullable()
-      table.string('peso').notNullable()
-      table.decimal('preco', 10, 2).notNullable()
-      table.integer('estoque').notNullable()
+      table.string('brand').notNullable()
+      table.string('weight').notNullable()
+      table.decimal('price', 10, 2).notNullable()
+      table.integer('stock').notNullable()
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
