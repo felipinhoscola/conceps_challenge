@@ -1,10 +1,10 @@
 import { DateTime } from 'luxon'
 import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
-import Cart from '#models/cart'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import Product from '#models/product'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import Cart from '#models/cart'
 
-export default class PedidoVenda extends BaseModel {
+export default class SalesOrder extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
@@ -19,25 +19,25 @@ export default class PedidoVenda extends BaseModel {
   declare product: BelongsTo<typeof Product>
 
   @column()
-  declare produto_desc: string;
+  declare product_desc: string;
 
   @column()
-  declare produto_marca: string
+  declare product_brand: string
 
   @column()
-  declare produto_peso: string
+  declare product_weight: string
 
   @column()
-  declare produto_preco: number
+  declare product_price: number
 
   @column()
-  declare produto_unidade: string
+  declare product_unit: string
 
   @column()
-  declare produto_qtd_total: number
+  declare product_total_quantity: number
 
   @column()
-  declare produto_preco_total: number
+  declare product_total_price: number
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
