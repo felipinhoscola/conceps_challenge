@@ -2,8 +2,8 @@
 import { Container, Flex, Box, Wrap, WrapItem, Link, Card, Stack, CardBody, Heading, Text, Input, CardFooter, Button, Divider, ButtonGroup, Spacer, useToast, TableContainer, Table, Thead, Tr, Th, Tbody, Td, Spinner } from "@chakra-ui/react";
 import { UseQueryResult, useQuery, useMutation } from '@tanstack/react-query'
 import { useState } from "react";
-import TableRow from "./tablerow";
-import Summary from "./summary";
+import TableRow from "../../components/tablerow";
+import Summary from "../../components/summary";
 import { api } from "@/services/api";
 
 export default function Home() {
@@ -12,13 +12,13 @@ export default function Home() {
 
   const { isLoading, data, error, refetch } = useQuery({
     queryKey: ['list'], queryFn: () => {
-      return api.get('/cart/list/1')
+      return api.get('/cart/1')
         .then((response) => response.data)
     },
   });
   const removeItem = useMutation({
     mutationFn: (produtoId) => {
-      return api.delete(`/cartItem/removeItem/${produtoId}`)
+      return api.delete(`/cartItems/${produtoId}`)
         .then((response) => response.data)
         .catch(error => {
           console.error(error);
@@ -26,7 +26,7 @@ export default function Home() {
         .finally(refetch)
     },
   })
-  const updateItem = async (item, action) => {
+  const updateItem = async (item: any, action: any) => {
     let newQuantidade = item.quantidade;
     let produtoId = item.produto.id;
     if (action === 'decrease') {
@@ -39,10 +39,10 @@ export default function Home() {
       newQuantidade++;
     }
 
-    const reponse = await verificaEstoque.mutateAsync({ id: produtoId, estoque: newQuantidade });
+    const reponse = await checkStock.mutateAsync({ id: produtoId, estoque: newQuantidade });
 
     if (reponse[0].isDisponivel) {
-      uptadeItemMutate.mutate({ produtoId, newQuantidade });
+      updateItemQuantity.mutate({ produtoId, newQuantidade });
     } else {
       toast({
         title: `Quantidade máxima de estoque atingida`,
@@ -52,25 +52,32 @@ export default function Home() {
       });
     }
   }
-  const verificaEstoque = useMutation({
-    mutationFn: (produto) => {
-      return api.post(`/products/consultaEstoque`, {
-        produto
-      }).then((response) => response.data)
+  const checkStock = useMutation({
+    mutationFn: ({ id, estoque }: any) => {
+      return api.post(`/products`, {
+        "produto": {
+          "id": id,
+          "estoque": estoque
+        }
+      })
+        .then((response) => response.data)
     }
   })
-  const uptadeItemMutate = useMutation({
-    mutationFn: ({ produtoId, newQuantidade }) => {
-      return api.put(`/cartitem/updateQuantidade/${produtoId}/${newQuantidade}`)
+  const updateItemQuantity = useMutation({
+    mutationFn: ({ produtoId, newQuantidade }: any) => {
+      return api.patch(`/cartItems/1`, {
+        "product_id": produtoId,
+        "quantidade": newQuantidade
+      })
         .then((response) => response.data)
-        .catch((error) => console.log(error))
+        .catch((error) => console.log(error.message))
         .finally(refetch)
     }
   })
 
-  const gerarPedidoVenda = useMutation({
+  const genSalesOrder = useMutation({
     mutationFn: () => {
-      return api.post(`/cartitem/finalizaPedido/${1}`)
+      return api.post(`/salesOrder/`, { cart_id: 1 })
         .then((response) => response.data)
         .catch((error) => console.log(error))
         .finally(refetch)
@@ -138,7 +145,7 @@ export default function Home() {
               </Tbody>
             </Table>
           </TableContainer>
-          <Summary total={priceTotal} gerarPedidoVenda={gerarPedidoVenda}></Summary>
+          <Summary total={priceTotal} genSalesOrder={genSalesOrder}></Summary>
         </Flex>
         <Box pt='5'>
           <Link href='/'>

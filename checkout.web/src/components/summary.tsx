@@ -1,6 +1,6 @@
 import { Card, CardBody, Stack, Heading, Flex, Text, Divider, CardFooter, Button, Box } from "@chakra-ui/react";
 
-export default function Summary({ total, gerarPedidoVenda }) {
+export default function Summary({ total, genSalesOrder }: any) {
     return (<Box width={{ md: "30%", sm: '100%' }}>
         <Card maxW='sm'>
             <CardBody>
@@ -34,7 +34,7 @@ export default function Summary({ total, gerarPedidoVenda }) {
                 </Stack>
                 <Divider />
                 <Box mt='3'>
-                    <Button variant='solid' colorScheme='green' w='100%' onClick={() => { gerarPedidoVenda.mutate() }} >
+                    <Button variant='solid' colorScheme='green' w='100%' onClick={() => { genSalesOrder.mutate() }} >
                         Finalizar Compra
                     </Button>
                 </Box>

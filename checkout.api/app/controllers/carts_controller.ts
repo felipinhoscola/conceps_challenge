@@ -11,7 +11,7 @@ export default class CartsController {
     try {
       const resCart = await CartItem.query().from('cart_items').where('cart_id', cartId).orderBy('index', 'asc');
       if (resCart.length == 0) {
-        return response.status(404).send('Carrinho não encontrado');
+        return response.status(204)
       }
 
       const promises = resCart.map(async cartItem => {
